@@ -6,7 +6,7 @@ export const analyzeCode = async (code: string, type: AnalysisType, context: str
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
 
-  let systemPrompt = `You are AuditAI, a Senior Smart Contract Auditor.`;
+  let systemPrompt = `You are Talos, a Senior Smart Contract Auditor.`;
   // ... (Keeping original logic for simple analysis if needed, but main focus is on generateAuditReport)
 
   try {
@@ -27,7 +27,7 @@ export const generateAuditReport = async (fileName: string, code: string, projec
   
   // We inject the "persona" of the selected model into the system prompt.
   // This makes Gemini 'act' like the selected engine or the ensemble.
-  const systemPrompt = `You are AuditAI, an advanced automated security auditor.
+  const systemPrompt = `You are TALOS, an advanced automated security auditor.
   
   **OPERATIONAL MODE:** ${modelLabel}
   ${modelLabel.includes('Unified') ? 

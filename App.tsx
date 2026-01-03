@@ -130,9 +130,9 @@ const App: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-black text-white tracking-tight">
-                Audit<span className="text-indigo-400">AI</span>
+                TALOS<span className="text-indigo-400">.AI</span>
               </h1>
-              <div className="text-[10px] text-slate-400 font-medium">Smart Contract Security</div>
+              <div className="text-[10px] text-slate-400 font-medium">Autonomous Security</div>
             </div>
           </div>
         </div>
@@ -142,19 +142,19 @@ const App: React.FC = () => {
             active={activeTab === Tab.DASHBOARD} 
             onClick={() => setActiveTab(Tab.DASHBOARD)}
             icon={<LayoutDashboard />}
-            label="Overview"
+            label="Mission Control"
           />
           <NavButton 
             active={activeTab === Tab.SCANNER} 
             onClick={() => setActiveTab(Tab.SCANNER)}
             icon={<FileSearch />}
-            label="AI Scanner"
+            label="Code Scanner"
           />
           <NavButton 
             active={activeTab === Tab.REPORTS} 
             onClick={() => setActiveTab(Tab.REPORTS)}
             icon={<Activity />}
-            label="Audit Reports"
+            label="Audit Certificates"
           />
         </nav>
 
@@ -202,9 +202,9 @@ const App: React.FC = () => {
         {/* Top Bar */}
         <header className="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md flex justify-between items-center px-8 z-10">
           <h2 className="text-lg font-semibold text-white">
-            {activeTab === Tab.DASHBOARD && 'Project Dashboard'}
-            {activeTab === Tab.SCANNER && 'Vulnerability Scanner'}
-            {activeTab === Tab.REPORTS && 'Compliance Reports'}
+            {activeTab === Tab.DASHBOARD && 'System Overview'}
+            {activeTab === Tab.SCANNER && 'Vulnerability Analysis'}
+            {activeTab === Tab.REPORTS && 'Compliance Center'}
           </h2>
           <div className="flex items-center gap-4">
              <div className="text-sm text-slate-400 hidden md:block">Target Project: <span className="text-indigo-400 font-bold">{project.name}</span></div>

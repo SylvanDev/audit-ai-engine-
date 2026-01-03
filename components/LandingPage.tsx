@@ -21,7 +21,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onConnect, onGuestEnte
           <div className="bg-indigo-600 p-2 rounded-lg shadow-lg shadow-indigo-500/30">
             <ShieldCheck className="w-6 h-6 text-white" />
           </div>
-          <span className="text-xl font-black tracking-tight">Audit<span className="text-indigo-400">AI</span></span>
+          <span className="text-xl font-black tracking-tight">TALOS<span className="text-indigo-400">.AI</span></span>
         </div>
         <div className="flex gap-6 text-sm font-medium text-slate-400">
           <span className="hover:text-white cursor-pointer transition-colors">Infrastructure</span>
@@ -33,12 +33,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onConnect, onGuestEnte
       <main className="flex-grow flex flex-col items-center justify-center text-center px-4 relative z-10">
         
         <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight max-w-4xl bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both delay-100">
-          Intelligent Security for <br/>
+          Autonomous Security for <br/>
           <span className="text-indigo-500">Solana Protocols</span>
         </h1>
 
         <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both delay-200">
-          Autonomous static analysis infrastructure utilizing Multi-Agent Consensus to secure Anchor smart contracts.
+          The <strong>TALOS</strong> Infrastructure leverages Multi-Agent Consensus to secure Anchor smart contracts against logic errors and rug pulls.
         </p>
 
         <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both delay-300">
@@ -50,7 +50,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onConnect, onGuestEnte
             {isConnecting ? (
               <>
                 <div className="w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin"></div>
-                Initializing...
+                Initializing Talos Link...
               </>
             ) : (
               <>
@@ -90,7 +90,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onConnect, onGuestEnte
 
       {/* Footer */}
       <footer className="py-6 text-center text-slate-700 text-xs relative z-10">
-        AuditAI Platform v0.9.2 (Internal Beta)
+        Talos Security Platform v0.9.2 (Internal Beta)
       </footer>
     </div>
   );
