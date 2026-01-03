@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { AnalysisType, Severity, AuditProject } from "../types";
 
@@ -20,7 +21,7 @@ export const analyzeCode = async (code: string, type: AnalysisType, context: str
   }
 };
 
-export const generateAuditReport = async (fileName: string, code: string, project: AuditProject, modelLabel: string = "Gemini 1.5 Pro") => {
+export const generateAuditReport = async (fileName: string, code: string, project: AuditProject, modelLabel: string = "Gemini 3.0 Pro") => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
   

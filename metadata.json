@@ -1,5 +1,5 @@
 {
-  "name": "AlxBlock Audit Station",
-  "description": "A specialized security audit tool for the AlxBlock Bug Bounty program, featuring static analysis for Solana smart contracts and web infrastructure.",
+  "name": "AuditAI Platform",
+  "description": "Autonomous security infrastructure for Solana smart contracts.",
   "requestFramePermissions": []
 }

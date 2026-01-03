@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { AnalysisType, ProjectFile, AuditProject, AuditReport } from '../types';
 import { generateAuditReport, analyzeCode } from '../services/geminiService';
@@ -17,7 +18,7 @@ export const Analyzer: React.FC<AnalyzerProps> = ({ files, project, onSave, onAd
   const [fileName, setFileName] = useState(files[0]?.name || 'contract.rs');
   const [contractAddress, setContractAddress] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [selectedModel, setSelectedModel] = useState('Gemini 1.5 Pro (Google)');
+  const [selectedModel, setSelectedModel] = useState('Gemini 3.0 Pro (Google)');
   const [scanStep, setScanStep] = useState<string>('');
   
   // Mock function to simulate fetching code/data from Solana explorer
@@ -254,7 +255,7 @@ pub mod pump_fun_token {
             <div>
               <label className="text-xs text-slate-400 font-bold uppercase mb-2 block flex items-center gap-2">
                 Analysis Engine
-                <span className="px-1.5 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-[10px]">PRO</span>
+                <span className="px-1.5 py-0.5 bg-indigo-500/20 text-indigo-300 rounded text-[10px]">NEW</span>
               </label>
               <div className="relative">
                 <select 
@@ -263,7 +264,7 @@ pub mod pump_fun_token {
                   onChange={(e) => setSelectedModel(e.target.value)}
                 >
                   <optgroup label="Single Model (Fast)">
-                    <option>Gemini 1.5 Pro (Google)</option>
+                    <option>Gemini 3.0 Pro (Google)</option>
                     <option>GPT-4o (OpenAI)</option>
                     <option>Claude 3.5 Sonnet (Anthropic)</option>
                     <option>DeepSeek V3 (DeepSeek)</option>
@@ -277,7 +278,7 @@ pub mod pump_fun_token {
               <p className="text-[10px] text-slate-500 mt-2 leading-relaxed">
                 {selectedModel.includes('Unified') 
                   ? "Combines outputs from 5 top-tier LLMs to eliminate hallucinations and cross-verify vulnerabilities. Best for final production audits."
-                  : "Standard single-pass analysis suitable for quick checks and development loops."}
+                  : "Standard single-pass analysis using the latest SOTA inference models."}
               </p>
             </div>
             

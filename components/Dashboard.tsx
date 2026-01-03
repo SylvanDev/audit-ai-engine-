@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { AuditProject, AuditReport } from '../types';
-import { Shield, AlertTriangle, CheckCircle, Activity, FileText, Lock, Server, Zap, Clock, DollarSign, BrainCircuit, Network, Database, Cpu, LockKeyhole } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, Activity, FileText, Server, Network, BrainCircuit } from 'lucide-react';
 
 interface DashboardProps {
   project: AuditProject;
@@ -29,7 +30,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
       <div className="bg-gradient-to-r from-indigo-900/50 to-slate-900 p-8 rounded-2xl border border-indigo-500/20 flex flex-col md:flex-row justify-between items-center gap-6 shadow-2xl">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-2 py-1 bg-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase rounded border border-indigo-500/30">Beta 0.9.2</span>
             <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-bold uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               System Operational
@@ -37,8 +37,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
           </div>
           <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Security Overview</h2>
           <p className="text-slate-400 text-sm max-w-xl leading-relaxed">
-             AuditAI uses <span className="text-indigo-400 font-bold">Multi-Agent Consensus</span> to monitor your project's integrity. 
-             Unlike standard linters, we analyze logic, not just syntax.
+             Advanced static analysis for Solana smart contracts. 
+             We monitor logic integrity and vulnerabilities using multi-agent AI consensus.
           </p>
         </div>
         <div className="flex items-center gap-6 bg-slate-950/50 p-6 rounded-xl border border-slate-700/50 backdrop-blur-md">
@@ -64,7 +64,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
              <h3 className="font-semibold text-slate-200">Audits Performed</h3>
            </div>
            <div className="text-3xl font-bold text-white tracking-tight">{reports.length}</div>
-           <div className="text-xs text-slate-500 mt-1">Files analyzed by Unified Engine</div>
+           <div className="text-xs text-slate-500 mt-1">Files analyzed</div>
         </div>
 
         {/* Metric 2 */}
@@ -83,62 +83,60 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
         <div className="bg-slate-800/50 p-6 rounded-xl border border-slate-700/50 backdrop-blur-sm hover:border-emerald-500/30 transition-colors group">
            <div className="flex items-center gap-3 mb-4">
              <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400 group-hover:bg-emerald-500/20 transition-colors"><Shield className="w-5 h-5" /></div>
-             <h3 className="font-semibold text-slate-200">Ecosystem Impact</h3>
+             <h3 className="font-semibold text-slate-200">Security Status</h3>
            </div>
-           <div className="text-3xl font-bold text-white tracking-tight">$0</div>
-           <div className="text-xs text-slate-500 mt-1">Cost vs Traditional Audit ($30k+)</div>
+           <div className="text-3xl font-bold text-white tracking-tight">Active</div>
+           <div className="text-xs text-slate-500 mt-1">Real-time monitoring</div>
         </div>
       </div>
 
-      {/* GRANT ROADMAP SECTION - VITAL FOR INVESTORS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Comparison Table */}
+        {/* Features Table */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
           <div className="p-6 border-b border-slate-800">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <BrainCircuit className="w-5 h-5 text-indigo-500" />
-              Market Advantage
+              Platform Capabilities
             </h3>
-            <p className="text-sm text-slate-400">Why the Unified Engine outperforms competitors.</p>
           </div>
           <div className="overflow-x-auto flex-grow">
             <table className="w-full text-sm text-left">
               <thead className="bg-slate-950 text-xs uppercase text-slate-400 font-bold">
                 <tr>
                   <th className="px-6 py-4">Feature</th>
-                  <th className="px-6 py-4 text-slate-500">Others</th>
-                  <th className="px-6 py-4 text-indigo-400 bg-indigo-900/10 border-t-2 border-indigo-500">AuditAI</th>
+                  <th className="px-6 py-4 text-slate-500">Standard Tools</th>
+                  <th className="px-6 py-4 text-indigo-400 bg-indigo-900/10 border-t-2 border-indigo-500">Our Platform</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
                 <tr className="hover:bg-slate-800/30">
                   <td className="px-6 py-4 font-bold text-slate-200">Logic Analysis</td>
-                  <td className="px-6 py-4 text-red-400 font-bold">Poor</td>
+                  <td className="px-6 py-4 text-red-400 font-bold">Limited</td>
                   <td className="px-6 py-4 font-bold text-emerald-400 bg-indigo-900/5">Advanced (AI)</td>
                 </tr>
                 <tr className="hover:bg-slate-800/30">
                   <td className="px-6 py-4 font-bold text-slate-200">Bytecode Decompile</td>
                   <td className="px-6 py-4 text-red-400 font-bold">No</td>
-                  <td className="px-6 py-4 font-bold text-emerald-400 bg-indigo-900/5">Yes (Pipeline)</td>
+                  <td className="px-6 py-4 font-bold text-emerald-400 bg-indigo-900/5">In Development</td>
                 </tr>
                 <tr className="hover:bg-slate-800/30">
-                  <td className="px-6 py-4 font-bold text-slate-200">Cost</td>
-                  <td className="px-6 py-4 text-slate-400">$30k+</td>
-                  <td className="px-6 py-4 font-bold text-white bg-indigo-900/5">~$50/mo</td>
+                  <td className="px-6 py-4 font-bold text-slate-200">Real-time Scan</td>
+                  <td className="px-6 py-4 text-slate-400">Manual</td>
+                  <td className="px-6 py-4 font-bold text-white bg-indigo-900/5">Automated</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Technical Architecture (Roadmap) */}
+        {/* Technical Roadmap */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden p-6 relative">
            <div className="absolute top-0 right-0 p-4 opacity-5">
              <Network className="w-32 h-32 text-indigo-500" />
            </div>
            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
              <Server className="w-5 h-5 text-indigo-500" />
-             Production Roadmap (Grant Scope)
+             Development Roadmap
            </h3>
            <div className="space-y-6 relative z-10">
              
@@ -151,9 +149,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
                  <div className="h-full w-0.5 bg-slate-800 my-2"></div>
                </div>
                <div>
-                 <h4 className="font-bold text-white text-sm">Phase 1: AI Frontend (MVP)</h4>
+                 <h4 className="font-bold text-white text-sm">Phase 1: Frontend MVP</h4>
                  <p className="text-xs text-slate-400 mt-1">
-                   Interactive UI, Gemini Integration, Report Generation. <span className="text-emerald-400">Completed.</span>
+                   Interactive UI, Gemini Integration, Report Generation. <span className="text-emerald-400">Live.</span>
                  </p>
                </div>
              </div>
@@ -169,10 +167,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
                <div>
                  <h4 className="font-bold text-indigo-300 text-sm flex items-center gap-2">
                    Phase 2: Decompilation Engine
-                   <span className="px-1.5 py-0.5 bg-indigo-500 text-white text-[9px] rounded uppercase font-bold">Grant Needed</span>
                  </h4>
                  <p className="text-xs text-slate-400 mt-1">
-                   Backend service to fetch raw BPF bytecode from RPC nodes and decompile it to readable Rust for AI analysis.
+                   Backend service to fetch raw BPF bytecode from RPC nodes and decompile it to readable Rust.
                  </p>
                </div>
              </div>
@@ -187,7 +184,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ project, reports, onUpdate
                <div>
                  <h4 className="font-bold text-slate-300 text-sm">Phase 3: Hybrid Consensus</h4>
                  <p className="text-xs text-slate-500 mt-1">
-                   Integrating <code className="bg-slate-800 px-1 rounded">Soteria</code> static analysis to run alongside LLMs for 99.9% accuracy.
+                   Integrating static analysis tools to run alongside LLMs for maximum accuracy.
                  </p>
                </div>
              </div>
