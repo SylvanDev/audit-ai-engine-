@@ -3,12 +3,13 @@ import { GoogleGenAI } from "@google/genai";
 import { AnalysisType, Severity, AuditProject } from "../types";
 
 export const analyzeCode = async (code: string, type: AnalysisType, context: string, fileName: string, project: AuditProject) => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
-
   let systemPrompt = `You are Talos, a Tier-1 Smart Contract Auditor specialized in Solana (Rust/Anchor).`;
 
   try {
+    // Initialize inside try block to handle missing API key gracefully
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const response = await ai.models.generateContent({
       model: modelId,
       contents: `File Name: ${fileName}\nAnalysis Type: ${type}\nAdditional Context: ${context}\n\nCODE TO AUDIT:\n\`\`\`\n${code}\n\`\`\``,
@@ -21,7 +22,6 @@ export const analyzeCode = async (code: string, type: AnalysisType, context: str
 };
 
 export const generateAuditReport = async (fileName: string, code: string, project: AuditProject, modelLabel: string = "Gemini 3.0 Pro") => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
   
   // This is the "Infrastructure" logic. 
@@ -60,6 +60,9 @@ export const generateAuditReport = async (fileName: string, code: string, projec
   `;
 
   try {
+    // Initialize inside try block to safely handle missing key on Vercel
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
     const response = await ai.models.generateContent({
       model: modelId,
       contents: `FILE: ${fileName}\n\nSOURCE CODE:\n${code}`,
@@ -76,8 +79,8 @@ export const generateAuditReport = async (fileName: string, code: string, projec
     return {
       riskScore: 0,
       issuesFound: 1,
-      summary: "Analysis Error: Could not connect to inference nodes.",
-      markdown: "## System Error\nUnable to complete audit. Please check your API key or internet connection."
+      summary: "Analysis Error: Could not connect to inference nodes. Please check API Key.",
+      markdown: "## System Error\nUnable to complete audit. Ensure the **API_KEY** environment variable is set in Vercel settings."
     };
   }
 };
