@@ -6,8 +6,7 @@ export const analyzeCode = async (code: string, type: AnalysisType, context: str
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
 
-  let systemPrompt = `You are Talos, a Senior Smart Contract Auditor.`;
-  // ... (Keeping original logic for simple analysis if needed, but main focus is on generateAuditReport)
+  let systemPrompt = `You are Talos, a Tier-1 Smart Contract Auditor specialized in Solana (Rust/Anchor).`;
 
   try {
     const response = await ai.models.generateContent({
@@ -25,52 +24,60 @@ export const generateAuditReport = async (fileName: string, code: string, projec
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelId = "gemini-3-pro-preview";
   
-  // We inject the "persona" of the selected model into the system prompt.
-  // This makes Gemini 'act' like the selected engine or the ensemble.
-  const systemPrompt = `You are TALOS, an advanced automated security auditor.
-  
-  **OPERATIONAL MODE:** ${modelLabel}
-  ${modelLabel.includes('Unified') ? 
-    "You are acting as a Consensus Engine, synthesizing findings from multiple LLM perspectives (GPT-4o, Claude 3.5, Gemini). Be extremely critical, precise, and authoritative. Cross-reference findings to eliminate false positives." : 
-    `You are simulating the analytical style of ${modelLabel}. Focus on the specific strengths of this model (e.g., if Claude - focus on safety/nuance; if GPT-4 - focus on broad reasoning).`}
+  // This is the "Infrastructure" logic. 
+  // We frame the AI not as a chatbot, but as a rigid analysis engine.
+  const systemPrompt = `
+  IDENTITY: You are TALOS (Autonomous Security Infrastructure), a specialized static analysis engine for Solana Smart Contracts written in Rust/Anchor.
 
-  **PROJECT:** ${project.name}
-  **FILE:** ${fileName}
-  
-  **TASK:**
-  Analyze the code and determine a "Risk Score" (0-100, where 100 is Safe, 0 is Dangerous).
-  Identify the number of issues.
-  Write a summary suitable for an Investor Due Diligence report.
-  
-  **OUTPUT JSON:**
+  OBJECTIVE: Perform a rigorous, pessimistic security audit of the provided code. Your goal is to protect investors from scams, rug pulls, and incompetence.
+
+  ANALYSIS VECTORS:
+  1. **Privilege Escalation:** Can a user call instructions meant for the admin? (Missing \`#[account(signer)]\`, missing \`has_one\` checks).
+  2. **Economic Exploits:** Infinite minting, arithmetic overflow (if no overflow checks), logic errors in token transfer amounts.
+  3. **Rug Pull Indicators (CRITICAL):** 
+     - Mint Authority not revoked on SPL tokens.
+     - Freeze Authority enabled.
+     - Hardcoded fees sending funds to a dev wallet.
+     - Ability to pause transfers indefinitely.
+  4. **Data Validation:** Missing checks on account constraints (e.g., ensuring a token account belongs to the correct mint).
+
+  OUTPUT FORMAT:
+  Return strictly valid JSON. Do not use Markdown code blocks. The JSON must match this schema:
   {
-    "riskScore": number, // 0 to 100
-    "issuesFound": number,
-    "summary": "string (Short professional summary, mentioning the analysis engine used)",
-    "markdown": "string (Full detailed report with fixes, strictly formatted in Markdown)"
+    "riskScore": number, // 0-100. Start at 100. Deduct 20 for Critical, 10 for High, 5 for Medium issues. If Rug Pull vector found, score MUST be < 40.
+    "issuesFound": number, // Total count of issues
+    "summary": "string", // A 1-sentence executive summary for an investor. E.g., "CRITICAL: Mint authority is not revoked, allowing the developer to dump tokens."
+    "markdown": "string" // A formatted report using emojis and bold text. Structure:
+                          // ## 🚨 Critical Findings
+                          // - **Issue Name**: Description...
+                          // ## ⚠️ Warnings
+                          // - **Issue Name**: Description...
+                          // ## ✅ Safe Patterns
+                          // - Description...
   }
+
+  TONE: Professional, paranoid, concise. No fluff.
   `;
 
   try {
     const response = await ai.models.generateContent({
       model: modelId,
-      contents: `File: ${fileName}\nCode:\n${code}`,
+      contents: `FILE: ${fileName}\n\nSOURCE CODE:\n${code}`,
       config: { 
         systemInstruction: systemPrompt,
         responseMimeType: "application/json"
       },
     });
     
-    // Ensure response.text is not undefined
     const text = response.text || "{}";
     return JSON.parse(text);
   } catch (error) {
     console.error(error);
     return {
-      riskScore: 50,
-      issuesFound: 0,
-      summary: "Automated audit failed to generate.",
-      markdown: "Service error. Please try again."
+      riskScore: 0,
+      issuesFound: 1,
+      summary: "Analysis Error: Could not connect to inference nodes.",
+      markdown: "## System Error\nUnable to complete audit. Please check your API key or internet connection."
     };
   }
 };
