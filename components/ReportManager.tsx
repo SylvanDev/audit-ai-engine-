@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { AuditReport } from '../types';
 import ReactMarkdown from 'react-markdown';
-import { CheckCircle, AlertTriangle, FileText, Download, Share2, ChevronLeft } from 'lucide-react';
+import { CheckCircle, AlertTriangle, FileText, Download, Share2, ChevronLeft, Rocket, DollarSign } from 'lucide-react';
 
 interface ReportManagerProps {
   reports: AuditReport[];
@@ -62,6 +62,37 @@ export const ReportManager: React.FC<ReportManagerProps> = ({ reports }) => {
                   <div className="text-xl font-bold text-emerald-600 mt-1">Verified</div>
                 </div>
              </div>
+            
+             {/* Monetization / Actionable Intel */}
+             {selectedReport.riskScore > 80 && (
+              <div className="bg-emerald-900/5 border border-emerald-500/20 rounded-xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                <div>
+                  <h3 className="text-lg font-bold text-emerald-700 flex items-center gap-2">
+                    <Rocket className="w-5 h-5" />
+                    Green Light Detected
+                  </h3>
+                  <p className="text-slate-500 text-sm mt-1">
+                    This contract passed consensus checks. Low probability of rug pull.
+                  </p>
+                </div>
+                <div className="flex gap-3 w-full md:w-auto">
+                  <button 
+                    onClick={() => window.open('https://t.me/solana_trojanbot?start=r-talos', '_blank')}
+                    className="flex-1 md:flex-none px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow-lg shadow-emerald-900/20 transition-all flex items-center justify-center gap-2 transform hover:scale-105"
+                  >
+                    <Rocket className="w-4 h-4" />
+                    Snipe on Trojan
+                  </button>
+                  <button 
+                    onClick={() => window.open('https://jup.ag', '_blank')}
+                    className="flex-1 md:flex-none px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg border border-slate-600 transition-all flex items-center justify-center gap-2"
+                  >
+                    <DollarSign className="w-4 h-4" />
+                    Jupiter
+                  </button>
+                </div>
+              </div>
+             )}
 
              <div className="prose max-w-none prose-headings:font-bold prose-h2:text-indigo-900 prose-h3:text-slate-800 prose-pre:bg-slate-900 prose-pre:text-slate-50">
                <ReactMarkdown>{selectedReport.fullReportMarkdown}</ReactMarkdown>

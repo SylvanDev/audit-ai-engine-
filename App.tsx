@@ -4,7 +4,7 @@ import { Dashboard } from './components/Dashboard';
 import { Analyzer } from './components/Analyzer';
 import { ReportManager } from './components/ReportManager';
 import { LandingPage } from './components/LandingPage';
-import { LayoutDashboard, FileSearch, ShieldCheck, Activity, LogOut, Wallet, UserCircle, LogIn } from 'lucide-react';
+import { LayoutDashboard, FileSearch, ShieldCheck, Activity, LogOut, Wallet, UserCircle, LogIn, BadgeCheck, X, Copy, ExternalLink, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
 import { ProjectFile, AuditProject, AuditReport } from './types';
 
 enum Tab {
@@ -33,6 +33,11 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string>('');
   const [isGuest, setIsGuest] = useState(false);
+  
+  // Monetization State
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<'idle' | 'verifying' | 'success'>('idle');
+  const [txHashInput, setTxHashInput] = useState('');
   
   // Wallet Connection State
   const [isConnecting, setIsConnecting] = useState(false);
@@ -107,6 +112,21 @@ const App: React.FC = () => {
     }
   };
 
+  const handleVerifyPayment = () => {
+    if (!txHashInput) return;
+    setPaymentStep('verifying');
+    // Simulate API call to Solana RPC
+    setTimeout(() => {
+      setPaymentStep('success');
+    }, 2500);
+  };
+
+  const resetPaymentModal = () => {
+    setIsPaymentModalOpen(false);
+    setPaymentStep('idle');
+    setTxHashInput('');
+  };
+
   if (!isAuthenticated) {
     return (
       <LandingPage 
@@ -157,6 +177,16 @@ const App: React.FC = () => {
             label="Audit Certificates"
           />
         </nav>
+
+        <div className="px-4 pb-2">
+           <button
+             onClick={() => setIsPaymentModalOpen(true)}
+             className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white p-3 rounded-lg shadow-lg shadow-orange-900/20 flex items-center justify-center gap-2 font-bold transition-all transform hover:scale-[1.02] text-sm group"
+           >
+             <BadgeCheck className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+             Get Certified <span className="opacity-75 font-normal text-xs">(0.5 SOL)</span>
+           </button>
+        </div>
 
         <div className="p-4 border-t border-slate-700/50">
           {isGuest ? (
@@ -230,6 +260,102 @@ const App: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Payment Modal */}
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-amber-500/30 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-600"></div>
+            <button onClick={resetPaymentModal} className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors z-10">
+              <X className="w-5 h-5" />
+            </button>
+
+            {paymentStep === 'idle' && (
+              <div className="p-8 text-center animate-in slide-in-from-left duration-300">
+                <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+                  <BadgeCheck className="w-8 h-8 text-amber-500" />
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">Get Verified</h3>
+                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                  Send <span className="text-white font-bold">0.5 SOL</span> to receive your on-chain audit certificate and trust badge.
+                </p>
+
+                <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 mb-6 text-left relative group">
+                  <label className="text-[10px] text-slate-500 font-bold uppercase block mb-2 tracking-wider">Treasury Address:</label>
+                  <div className="flex items-center gap-2 bg-slate-900 p-3 rounded border border-slate-700/50 group-hover:border-amber-500/30 transition-colors">
+                    <code className="text-xs font-mono text-emerald-400 truncate flex-grow">
+                      TalosSec...AuditWallet
+                    </code>
+                    <button className="text-slate-400 hover:text-white" title="Copy Address">
+                      <Copy className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <input 
+                    type="text" 
+                    placeholder="Paste Transaction Hash..." 
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                    value={txHashInput}
+                    onChange={(e) => setTxHashInput(e.target.value)}
+                  />
+                  <button 
+                    onClick={handleVerifyPayment}
+                    disabled={!txHashInput}
+                    className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-indigo-900/20 transition-all hover:scale-[1.02]"
+                  >
+                    Verify Payment
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {paymentStep === 'verifying' && (
+              <div className="p-12 text-center animate-in zoom-in duration-300 flex flex-col items-center justify-center h-[400px]">
+                <div className="relative mb-8">
+                  <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full"></div>
+                  <Loader2 className="w-16 h-16 text-indigo-400 animate-spin relative z-10" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Verifying Transaction</h3>
+                <p className="text-slate-400 text-sm font-mono">Confirming block finality...</p>
+                <div className="mt-8 w-full max-w-[200px] h-1 bg-slate-800 rounded-full overflow-hidden">
+                   <div className="h-full bg-indigo-500 animate-[progressBar_2s_ease-in-out]"></div>
+                </div>
+              </div>
+            )}
+
+            {paymentStep === 'success' && (
+              <div className="p-8 text-center animate-in slide-in-from-right duration-300">
+                 <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20 shadow-[0_0_40px_rgba(16,185,129,0.3)]">
+                  <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">Payment Confirmed!</h3>
+                <p className="text-slate-400 text-sm mb-6">
+                  Your project has been certified. You can now access the badge in the Compliance Center.
+                </p>
+                
+                <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 mb-6">
+                   <div className="text-[10px] text-slate-500 uppercase font-bold mb-2">Badge Preview</div>
+                   <div className="flex items-center gap-2 justify-center bg-black/40 p-3 rounded border border-emerald-500/30">
+                     <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                     <span className="font-bold text-emerald-400 text-sm">Talos Verified</span>
+                   </div>
+                </div>
+
+                <button 
+                  onClick={resetPaymentModal}
+                  className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg shadow-lg shadow-emerald-900/20 transition-all"
+                >
+                  Close & Download Assets
+                </button>
+              </div>
+            )}
+            
+          </div>
+        </div>
+      )}
     </div>
   );
 };

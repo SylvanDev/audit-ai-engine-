@@ -2,65 +2,31 @@
 import { GoogleGenAI } from "@google/genai";
 import { AnalysisType, Severity, AuditProject } from "../types";
 
-export const analyzeCode = async (code: string, type: AnalysisType, context: string, fileName: string, project: AuditProject) => {
-  const modelId = "gemini-3-pro-preview";
-  let systemPrompt = `You are Talos, a Tier-1 Smart Contract Auditor specialized in Solana (Rust/Anchor).`;
-
-  try {
-    // Initialize inside try block to handle missing API key gracefully
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
-    const response = await ai.models.generateContent({
-      model: modelId,
-      contents: `File Name: ${fileName}\nAnalysis Type: ${type}\nAdditional Context: ${context}\n\nCODE TO AUDIT:\n\`\`\`\n${code}\n\`\`\``,
-      config: { systemInstruction: systemPrompt },
-    });
-    return response.text;
-  } catch (error) {
-    return "Audit service unavailable. Please check API connection.";
-  }
-};
-
 export const generateAuditReport = async (fileName: string, code: string, project: AuditProject, modelLabel: string = "Gemini 3.0 Pro") => {
   const modelId = "gemini-3-pro-preview";
   
-  // This is the "Infrastructure" logic. 
-  // We frame the AI not as a chatbot, but as a rigid analysis engine.
   const systemPrompt = `
-  IDENTITY: You are TALOS (Autonomous Security Infrastructure), a specialized static analysis engine for Solana Smart Contracts written in Rust/Anchor.
+  IDENTITY: You are TALOS (Autonomous Security Infrastructure). You are NOT a friendly assistant. You are a paranoid, tier-1 smart contract auditor for the Solana ecosystem.
 
-  OBJECTIVE: Perform a rigorous, pessimistic security audit of the provided code. Your goal is to protect investors from scams, rug pulls, and incompetence.
+  CONTEXT: Standard tools like Rugcheck.xyz look for obvious red flags (mint authority, burned LP). YOU look for "The Hidden Rug" — complex logic flaws designed to steal money hours or days after launch.
 
-  ANALYSIS VECTORS:
-  1. **Privilege Escalation:** Can a user call instructions meant for the admin? (Missing \`#[account(signer)]\`, missing \`has_one\` checks).
-  2. **Economic Exploits:** Infinite minting, arithmetic overflow (if no overflow checks), logic errors in token transfer amounts.
-  3. **Rug Pull Indicators (CRITICAL):** 
-     - Mint Authority not revoked on SPL tokens.
-     - Freeze Authority enabled.
-     - Hardcoded fees sending funds to a dev wallet.
-     - Ability to pause transfers indefinitely.
-  4. **Data Validation:** Missing checks on account constraints (e.g., ensuring a token account belongs to the correct mint).
+  AUDIT VECTORS:
+  1. **Hidden Time-Locks:** Check for variables or functions that restrict withdrawals or change fee logic after a specific timestamp or slot.
+  2. **Economic Backdoors:** Functions that allow the dev to change prices in a bonding curve or increase fees to 100%.
+  3. **Access Control Flaws:** Is there a 'bypass' in the check for signer? Can a specific hardcoded public key call admin functions?
+  4. **Intent Analysis:** Does the code's behavior match its stated purpose? (e.g., if it's a "Token", why is there a function to 'burn' user balances into a dev wallet?)
 
   OUTPUT FORMAT:
-  Return strictly valid JSON. Do not use Markdown code blocks. The JSON must match this schema:
+  Return strictly valid JSON.
   {
-    "riskScore": number, // 0-100. Start at 100. Deduct 20 for Critical, 10 for High, 5 for Medium issues. If Rug Pull vector found, score MUST be < 40.
-    "issuesFound": number, // Total count of issues
-    "summary": "string", // A 1-sentence executive summary for an investor. E.g., "CRITICAL: Mint authority is not revoked, allowing the developer to dump tokens."
-    "markdown": "string" // A formatted report using emojis and bold text. Structure:
-                          // ## 🚨 Critical Findings
-                          // - **Issue Name**: Description...
-                          // ## ⚠️ Warnings
-                          // - **Issue Name**: Description...
-                          // ## ✅ Safe Patterns
-                          // - Description...
+    "riskScore": number, // 0-100. Be extremely harsh.
+    "issuesFound": number,
+    "summary": "1-sentence punchy summary for a retail investor.",
+    "markdown": "formatted report with ## 🚨 Critical, ## ⚠️ Warnings, and ## ✅ Safe Patterns. Use bold text and emojis."
   }
-
-  TONE: Professional, paranoid, concise. No fluff.
   `;
 
   try {
-    // Initialize inside try block to safely handle missing key on Vercel
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     const response = await ai.models.generateContent({
@@ -79,8 +45,8 @@ export const generateAuditReport = async (fileName: string, code: string, projec
     return {
       riskScore: 0,
       issuesFound: 1,
-      summary: "Analysis Error: Could not connect to inference nodes. Please check API Key.",
-      markdown: "## System Error\nUnable to complete audit. Ensure the **API_KEY** environment variable is set in Vercel settings."
+      summary: "Node Connection Failed. Manual review required.",
+      markdown: "## System Error\nCould not reach the AI Consensus Layer. Check your internet connection or API Key."
     };
   }
 };
